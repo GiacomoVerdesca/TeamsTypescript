@@ -4,21 +4,13 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Provider} from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import {authenticationReducer} from '../src/Redux/authenticationSlice'
-
-const store = configureStore({
-  reducer: {
-authentication:authenticationReducer
-  
-  }
-})
+import { Provider } from 'react-redux';
+import { store } from './Redux/store/configureStore';
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-    <App />
+      <App />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

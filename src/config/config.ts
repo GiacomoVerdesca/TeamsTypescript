@@ -1,5 +1,3 @@
-import { stringify } from "querystring";
-
 export const config:configInterface = {
   appId: "765221b8-fb88-4f07-a1ef-b40f3ad08d91",
   redirectURI: "http://localhost:3000/",
@@ -7,7 +5,7 @@ export const config:configInterface = {
 };
 
 export interface configInterface  {
-  appId:string;
+  appId:any;
   redirectURI:string;
   scopes:any;
 }

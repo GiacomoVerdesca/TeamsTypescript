@@ -1,27 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { config, configInterface } from "../../config/config";
+import { config } from "../../config/config";
 import { useSelector, useDispatch } from 'react-redux';
 import {
   PublicClientApplication,
   InteractionRequiredAuthError,
 } from "@azure/msal-browser";
-import { isAuthenticated, notAuthenticated } from "../../Redux/authenticationSlice";
- 
+import { isAuthenticated } from "../../Redux/slices/authenticationSlice";
+import { getUserGraph, setInitialUser } from "../../Redux/slices/userSlice";
+import { getUsernameUser } from "../../Redux/slices/usernameUserSlice";
+import { setInitialToken, getTokenActions } from "../../Redux/slices/tokenSlice";
+
 
 // import { GraphService } from '../../service/GraphService';
 
 export const AuthComponent = () => {
 
   const dispatch = useDispatch();
-  let authenticationSelector=(state:any)=>state.authentication
-  let authentication=useSelector(authenticationSelector);
-  console.log(authentication)
+
+  let authenticationSelector = (state: any) => state.authentication;
+  let authentication = useSelector(authenticationSelector);
+  let userSelector = (state: any) => state.user;
+  let user = useSelector(userSelector);
+  let usernameUserSelector = (state: any) => state.usernameUser;
+  let usernameUser = useSelector(usernameUserSelector);
+  let tokenSelector = (state: any) => state.token;
+  let token = useSelector(tokenSelector);
 
   //eliminare gli stati e usare redux toolkit----------------------------------
   const [error, setError] = useState(null);
-  //const [isAuthenticated, setIsAuthenticated] = useState();
-  const [user, setUser]:any = useState();
-  const [token, setToken] = useState();
 
   //istanza per la gestione degli errori tramite MSAL 
   const interactionRequiredAuthError = new InteractionRequiredAuthError();
@@ -30,19 +36,12 @@ export const AuthComponent = () => {
     auth: {
       clientId: config.appId,
       redirectUri: config.redirectURI,
-    },
-    cache: {
-      cacheLocation: "sessionStorage",
-      storeAuthStateInCookie: true,
-    },
+    }
   });
   //Recupero MicrosoftGraph per le chiamate API
   var graph = require('@microsoft/microsoft-graph-client');
   // let graphService = new GraphService.getInstance();
 
-  useEffect(() => {
-  
-  }, []);
 
   //MSAL
 
@@ -51,44 +50,46 @@ export const AuthComponent = () => {
       const authResult = await publicClientApplication.loginPopup(
         config.scopes
       );
-   
-     dispatch(isAuthenticated());
-      //sessionStorage.setItem("msalAccount", authResult.account.username);
+      dispatch(getUsernameUser(authResult.account?.username));
+      // const USERNAME: any = authResult.account?.username;
+      // sessionStorage.setItem("msalAccount", USERNAME);
+      dispatch(isAuthenticated(true));
       const User = await getUser();
-      sessionStorage.setItem('graphUser', JSON.stringify(User));
-    } catch (err) {
-     dispatch(notAuthenticated());
-      setError(err);
-      console.log(error)
+      dispatch(getUserGraph(User));
     }
-    
+    catch (err) {
+      setError(err);
+      console.log(error);
+      dispatch(isAuthenticated(false));
+    }
   };
 
   const logOut = () => {
     publicClientApplication.logout();
-    sessionStorage.removeItem('token');
-    dispatch(notAuthenticated());
-    sessionStorage.removeItem('graphUser');
+    dispatch(setInitialToken());
+    dispatch(isAuthenticated(false));
+    dispatch(setInitialUser());
   };
 
   //token
   const getToken = async () => {
-    let account = sessionStorage.getItem("msalAccount");
-    if (!account) {
+    //let account = sessionStorage.getItem("msalAccount");
+    //DEVO FARE IL LOGIN 2 VOLTE SENNO NON MI SI AUTENTICA
+    if (!usernameUser['username']) {
       throw new Error(
         "L'account dell' utente manca nel sessioneStorage. Perfavore sloggati e loggati ntorna."
       );
     }
 
     try {
-      const silentRequest :any= {
+      const silentRequest: any = {
         scopes: config.scopes,
-        account: publicClientApplication.getAccountByUsername(account),
+        account: publicClientApplication.getAccountByUsername(usernameUser['username']),
       };
       const silentResult = await publicClientApplication.acquireTokenSilent(
         silentRequest
       );
-      sessionStorage.setItem('token', silentResult.accessToken);
+      dispatch(getTokenActions(silentResult.accessToken));
       return silentResult.accessToken;
     } catch (silentError) {
       if (interactionRequiredAuthError) {
@@ -124,10 +125,10 @@ export const AuthComponent = () => {
 
   return (
     <span>
-      
-      {user && authentication ? (
+
+      {user.user && authentication.value === true ? (
         <span>
-          <span style={{ marginRight: '35px', color: 'white', fontSize: '20px' }}>Benvenuto {user.displayName}.</span>
+          <span style={{ marginRight: '35px', color: 'white', fontSize: '20px' }}>Benvenuto {user['user'].displayName}.</span>
           <button className='btn btn-danger' onClick={logOut}>LogOut</button>
         </span>
       ) : (
