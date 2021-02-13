@@ -9,14 +9,13 @@ import { isAuthenticated } from "../../Redux/slices/authenticationSlice";
 import { getUserGraph, setInitialUser } from "../../Redux/slices/userSlice";
 import { getUsernameUser } from "../../Redux/slices/usernameUserSlice";
 import { setInitialToken, getTokenActions } from "../../Redux/slices/tokenSlice";
-
-
-// import { GraphService } from '../../service/GraphService';
+import { GraphService } from '../../service/GraphService';
 
 export const AuthComponent = () => {
 
   const dispatch = useDispatch();
 
+  //Recupero state reducer dallo store redux
   let authenticationSelector = (state: any) => state.authentication;
   let authentication = useSelector(authenticationSelector);
   let userSelector = (state: any) => state.user;
@@ -26,7 +25,7 @@ export const AuthComponent = () => {
   let tokenSelector = (state: any) => state.token;
   let token = useSelector(tokenSelector);
 
-  //eliminare gli stati e usare redux toolkit----------------------------------
+  //Stato locale per visualizzare gli errori
   const [error, setError] = useState(null);
 
   //istanza per la gestione degli errori tramite MSAL 
@@ -40,11 +39,11 @@ export const AuthComponent = () => {
   });
   //Recupero MicrosoftGraph per le chiamate API
   var graph = require('@microsoft/microsoft-graph-client');
-  // let graphService = new GraphService.getInstance();
+  //Istanza servizio delle chiamate graph
+  let graphService = GraphService.getInstance();
 
 
-  //MSAL
-
+  //MSAL Login
   const logIn = async () => {
     try {
       const authResult = await publicClientApplication.loginPopup(
@@ -54,7 +53,7 @@ export const AuthComponent = () => {
       // const USERNAME: any = authResult.account?.username;
       // sessionStorage.setItem("msalAccount", USERNAME);
       dispatch(isAuthenticated(true));
-      const User = await getUser();
+      const User = await graphService.getUser(graphClient);
       dispatch(getUserGraph(User));
     }
     catch (err) {
@@ -64,6 +63,7 @@ export const AuthComponent = () => {
     }
   };
 
+  //Logut
   const logOut = () => {
     publicClientApplication.logout();
     dispatch(setInitialToken());
@@ -71,7 +71,7 @@ export const AuthComponent = () => {
     dispatch(setInitialUser());
   };
 
-  //token
+  //Token
   const getToken = async () => {
     //let account = sessionStorage.getItem("msalAccount");
     //DEVO FARE IL LOGIN 2 VOLTE SENNO NON MI SI AUTENTICA
@@ -103,29 +103,18 @@ export const AuthComponent = () => {
     }
   };
 
-  //GRAPH
-  // graphService.getUser();
-
+  //Recupero token per l'autorizzazione della chiamata con GRAPH
   const authProvider = {
     getAccessToken: async () => {
-      // Call getToken in auth.js
       return await getToken();
     }
   };
   const graphClient = graph.Client.initWithMiddleware({ authProvider });
 
-  const getUser = async () => {
-    return await graphClient
-      .api('/me')
-      // Only get the fields used by the app
-      .select('id,displayName,mail,userPrincipalName,mailboxSettings')
-      .get();
-  }
 
 
   return (
     <span>
-
       {user.user && authentication.value === true ? (
         <span>
           <span style={{ marginRight: '35px', color: 'white', fontSize: '20px' }}>Benvenuto {user['user'].displayName}.</span>
