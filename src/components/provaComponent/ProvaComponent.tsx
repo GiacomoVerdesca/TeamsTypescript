@@ -1,28 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { GraphService } from '../../service/GraphService';
-import { initGraph,client } from '../../service/InitialGraph';
+import { initGraph, client } from '../../service/InitialGraph';
+import { useSelector, useDispatch } from 'react-redux';
+import { isAuthenticated } from '../../Redux/slices/authenticationSlice';
+import { getUserGraph } from '../../Redux/slices/userSlice';
 
 let serviceCallApiGraph: any = GraphService.getInstance();
 
 export const ProvaComponent = () => {
 
-    const [authResponse, setAuthResponse] = useState<any>(null);
-    const [authentication, setAuthentication] = useState<any>(false);
 
+    const dispatch = useDispatch();
+
+    const authResponse = useSelector((state: any) => state.user.user);
+    const authentication = useSelector((state: any) => state.authentication.value);
+
+    // useEffect(() => {
+
+    // }, []);
 
     const sendEmail = () => {
         serviceCallApiGraph.sendEmail(client);
     }
 
+
     return (
         <div>
             {!authentication ? <div><button onClick={
                 () => {
-                    initGraph().then(res => {
-                        console.log(res);
-                        setAuthResponse(res);
-                    });
-                    setAuthentication(true);
+                    initGraph();
+                    dispatch(getUserGraph());
+                    { authResponse && dispatch(isAuthenticated(true)) };
                 }
             }>login</button></div>
                 :

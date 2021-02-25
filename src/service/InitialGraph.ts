@@ -5,13 +5,10 @@ import {
 } from "@microsoft/microsoft-graph-client";
 import { UserAgentApplication } from "msal";
 import { config } from "../config/config";
-import { GraphService } from "../service/GraphService";
-
-let service: any = GraphService.getInstance();
 
 export let client: Client;
 
-export const initGraph = (): Promise<any> => {
+export const initGraph = ():any => {
   const msalConfig = {
     auth: {
       clientId: config.appId,
@@ -27,5 +24,4 @@ export const initGraph = (): Promise<any> => {
   );
 
   client = Client.initWithMiddleware({ authProvider });
-  return service.getUser(client);
 };

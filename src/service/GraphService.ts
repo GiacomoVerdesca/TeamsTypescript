@@ -16,7 +16,7 @@ export class GraphService {
         return await client
             .api('/me')
             // Only get the fields used by the app
-            .select('id,displayName,mail,userPrincipalName,mailboxSettings')
+            // .select('id,displayName,mail,userPrincipalName,mailboxSettings')
             .get();
     }
 
@@ -27,7 +27,7 @@ export class GraphService {
             toRecipients: [
                 {
                     emailAddress: {
-                        address: "gianluca.bellafronte@gmail.com"
+                        address: "giacomo.verdesca@linksmt.it"
                     }
                 }
 

@@ -1,20 +1,27 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { GraphService } from "../../service/GraphService";
+import { client } from "../../service/InitialGraph";
+
+let serviceCallApiGraph: any = GraphService.getInstance();
+
+export const getUserGraph: any = createAsyncThunk(
+  "user/getUserGraph",
+  () => {
+    return serviceCallApiGraph.getUser(client);
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
   initialState: {
-      user:{}
+    user: {},
   },
-  reducers: {
-    getUserGraph: (state,action) => {
+  reducers: {},
+  extraReducers: {
+    [getUserGraph.fulfilled]: (state, action) => {
       state.user = action.payload;
-      return state;
-    },
-    setInitialUser: (state) => {
-      return state;
     },
   },
 });
 
-export const { getUserGraph, setInitialUser } = userSlice.actions;
-export const userReducer =  userSlice.reducer;
+export const userReducer = userSlice.reducer;
