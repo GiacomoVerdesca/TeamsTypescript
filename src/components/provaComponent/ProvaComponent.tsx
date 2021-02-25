@@ -37,6 +37,11 @@ export const ProvaComponent = () => {
                 <div>
                     <h1>Ciao {authResponse?.displayName}</h1>
                     <button onClick={sendEmail}>Send Mail</button>
+                    <button onClick={()=>{
+                        sessionStorage.clear();
+                        dispatch(isAuthenticated(false))
+                    }}>logout</button>
+                    
                 </div>}
         </div >
     )

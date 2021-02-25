@@ -27,15 +27,15 @@ export class GraphService {
             toRecipients: [
                 {
                     emailAddress: {
-                        address: "giacomo.verdesca@linksmt.it"
+                        address: "gianluca.bellafronte@gmail.com"
                     }
                 }
 
             ],
             body: {
                 content: `
-          <div>Prima mail ciao</div>
-          <h1>Ola amigo mio, oplà</h1>
+          <div>La nostra prima email</div>
+          <h1>Ciao Simone, Questa è un' email inviata da Gianluca e Giacomo</h1>
           `,
                 contentType: "html",
             },
