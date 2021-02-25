@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { config } from "../../config/config";
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -49,16 +49,16 @@ export const AuthComponent = () => {
       const authResult = await publicClientApplication.loginPopup(
         config.scopes
       );
+      //const USERNAME: any = authResult.account?.username;
+      //sessionStorage.setItem("msalAccount", USERNAME);
       dispatch(getUsernameUser(authResult.account?.username));
-      // const USERNAME: any = authResult.account?.username;
-      // sessionStorage.setItem("msalAccount", USERNAME);
-      dispatch(isAuthenticated(true));
       const User = await graphService.getUser(graphClient);
       dispatch(getUserGraph(User));
+      dispatch(isAuthenticated(true));
     }
     catch (err) {
       setError(err);
-      console.log(error);
+      console.log('L errore è', error);
       dispatch(isAuthenticated(false));
     }
   };
@@ -76,8 +76,9 @@ export const AuthComponent = () => {
     //let account = sessionStorage.getItem("msalAccount");
     //DEVO FARE IL LOGIN 2 VOLTE SENNO NON MI SI AUTENTICA
     if (!usernameUser['username']) {
+      // if (!account) {
       throw new Error(
-        "L'account dell' utente manca nel sessioneStorage. Perfavore sloggati e loggati ntorna."
+        "L'account dell' utente manca. Perfavore sloggati e loggati ntorna."
       );
     }
 
@@ -85,6 +86,7 @@ export const AuthComponent = () => {
       const silentRequest: any = {
         scopes: config.scopes,
         account: publicClientApplication.getAccountByUsername(usernameUser['username']),
+        // account: publicClientApplication.getAccountByUsername(usernameUser['username']),
       };
       const silentResult = await publicClientApplication.acquireTokenSilent(
         silentRequest
