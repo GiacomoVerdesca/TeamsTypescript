@@ -20,21 +20,27 @@ export class GraphService {
   };
 
   //send email
-  sendEmail = async (client: any) => {
+  sendEmail = async (client: any,email:any) => {
     const mail = {
-      subject: "talk Azure-la nostra prima email",
+      subject: email.subject,
       toRecipients: [
         {
           emailAddress: {
-            address: "gianluca.bellafronte@gmail.com",
+            address: email.toRecipients[0].emailAddress.address,
           },
-        },
+          
+        }
+            
+          ,
+      ],ccRecipients: [
+        {
+          emailAddress: {
+            address: "giacomo.verdesca@gmail.com"
+          }
+        }
       ],
       body: {
-        content: `
-          <div>La nostra prima email</div>
-          <h1>Ciao Simone, Questa è un' email inviata da Gianluca e Giacomo</h1>
-          `,
+        content: email.body.content,
         contentType: "html",
       },
     };

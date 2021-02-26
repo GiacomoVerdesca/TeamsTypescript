@@ -4,6 +4,7 @@ import { initGraph, client } from '../../service/InitialGraph';
 import { useSelector, useDispatch } from 'react-redux';
 import { isAuthenticated } from '../../Redux/slices/authenticationSlice';
 import { getUserGraph } from '../../Redux/slices/userSlice';
+import { SendMailComponent } from './sendMailComponent/SendMailComponent';
 
 let serviceCallApiGraph: any = GraphService.getInstance();
 
@@ -42,7 +43,7 @@ export const ProvaComponent = () => {
                 :
                 <div>
                     <h1>Ciao {authResponse?.displayName}</h1>
-                    <button onClick={sendEmail}>Send Mail</button>
+                    <SendMailComponent/>
                     <button onClick={createEvent}>Create event into calendar</button>
                     <button onClick={createOnlineMeeting}>Create onlineMeeting</button>
                     <button onClick={()=>{
