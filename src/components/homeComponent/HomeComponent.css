@@ -1,0 +1,8 @@
+.homeContainer {
+  text-align: center;
+}
+.rowDisplayname, .rowLogout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

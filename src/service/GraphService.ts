@@ -20,24 +20,17 @@ export class GraphService {
   };
 
   //send email
-  sendEmail = async (client: any,email:any) => {
+  sendEmail = async (client: any, email: any) => {
     const mail = {
       subject: email.subject,
-      toRecipients: [
+      toRecipients: email.toRecipients,
+      ccRecipients: [
         {
           emailAddress: {
-            address: email.toRecipients[0].emailAddress.address,
+            address:
+              client.config.authProvider.msalApplication.account.userName,
           },
-          
-        }
-            
-          ,
-      ],ccRecipients: [
-        {
-          emailAddress: {
-            address: "giacomo.verdesca@gmail.com"
-          }
-        }
+        },
       ],
       body: {
         content: email.body.content,
@@ -52,33 +45,25 @@ export class GraphService {
     }
   };
 
-  createEvent = async (client: any) => {
+  createEvent = async (client: any, Event: any) => {
     const params = {
-      subject: "Il nostro primo evento",
+      subject: Event.subject,
       body: {
         contentType: "HTML",
-        content: "L evento è stato creato da gianluca lu megghiu",
+        content: Event.body.content,
       },
       start: {
-        dateTime: new Date().toISOString(),
+        dateTime: Event.start.dateTime,
         timeZone: "Pacific Standard Time",
       },
       end: {
-        dateTime: new Date().toISOString(),
+        dateTime: Event.end.dateTime,
         timeZone: "Pacific Standard Time",
       },
       location: {
-        displayName: "onlinemeetings",
+        displayName: Event.location.displayName,
       },
-      attendees: [
-        {
-          emailAddress: {
-            address: "giacomo.verdesca@gmail.com",
-            name: "Giacomo Verdesca",
-          },
-          type: "required",
-        },
-      ],
+      attendees: Event.attendees,
     };
 
     try {
@@ -90,12 +75,12 @@ export class GraphService {
     }
   };
 
-  createOnlineMeeting = async (client: any) => {
+  createOnlineMeeting = async (client: any, meeting: any) => {
     console.log(client);
     const onlineMeeting = {
-      subject: "Questo è il nostro primo online meeting",
-      startDateTime: new Date().toISOString(),
-      endDateTime: new Date().toISOString(),
+      subject: meeting.subject,
+      startDateTime: meeting.startDateTime,
+      endDateTime: meeting.startDateTime,
     };
     try {
       const response = await client
