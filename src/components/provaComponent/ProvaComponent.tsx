@@ -22,6 +22,12 @@ export const ProvaComponent = () => {
     const sendEmail = () => {
         serviceCallApiGraph.sendEmail(client);
     }
+    const createEvent = () => {
+        serviceCallApiGraph.createEvent(client);
+    }
+    const createOnlineMeeting = () => {
+        serviceCallApiGraph.createOnlineMeeting(client);
+    }
 
 
     return (
@@ -37,6 +43,8 @@ export const ProvaComponent = () => {
                 <div>
                     <h1>Ciao {authResponse?.displayName}</h1>
                     <button onClick={sendEmail}>Send Mail</button>
+                    <button onClick={createEvent}>Create event into calendar</button>
+                    <button onClick={createOnlineMeeting}>Create onlineMeeting</button>
                     <button onClick={()=>{
                         sessionStorage.clear();
                         dispatch(isAuthenticated(false))
