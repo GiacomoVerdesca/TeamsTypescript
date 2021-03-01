@@ -4,7 +4,7 @@ import { NavbarComponent } from './core/navbarComponent/NavbarComponent';
 function App() {
   return (
     <div>
-      {/* <NavbarComponent /> */}
+      <NavbarComponent />
       <HomeComponent />
     </div>
   );

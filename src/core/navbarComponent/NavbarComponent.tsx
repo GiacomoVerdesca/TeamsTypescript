@@ -1,8 +1,10 @@
 import React from "react";
-// import { AuthComponent } from "../../components/authComponent/AuthComponent";
 import "./NavbarComponent.css";
+import { useSelector } from 'react-redux';
+
 export const NavbarComponent = () => {
 
+  const authResponse = useSelector((state: any) => state.user.user.displayName);
 
   return (
     <nav className="navbar myNavbar navbar-dark">
@@ -10,7 +12,7 @@ export const NavbarComponent = () => {
       <h3>Progetto REACT MICROSOFT TEAMS</h3>
       <div className="navbar-nav ">
 
-          {/* <AuthComponent /> */}
+        <p className='username'>{authResponse}</p>
 
       </div>
     </nav>

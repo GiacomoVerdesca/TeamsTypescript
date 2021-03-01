@@ -1,9 +1,13 @@
 .myNavbar {
-  background-color:  #2255ee;
+  background-color: #2255ee;
 }
-h3{
-  color:white;
+.myNavbar h3 {
+  color: white;
 }
-h3:hover{
+.myNavbar h3:hover {
   font-weight: bold;
+}
+.myNavbar .username {
+  font-size: 1.5em;
+  color: white;
 }

@@ -2,7 +2,6 @@ import React from 'react';
 import './HomeComponent.css';
 import { initGraph } from '../../service/InitialGraph';
 import { useSelector, useDispatch } from 'react-redux';
-// import { isAuthenticated } from '../../Redux/slices/authenticationSlice';
 import { getUserGraph, isAuthenticated } from '../../Redux/slices/userSlice';
 import { SendMailComponent } from './sendMailComponent/SendMailComponent';
 import { CreateEventComponent } from './createEventComponent/CreateEventComponent';
@@ -19,7 +18,6 @@ export const HomeComponent = () => {
     const authentication = useSelector((state: any) => state.user.authentication);
     const authResponsePending = useSelector((state: any) => state.user.pending);
     const authResponseRejected = useSelector((state: any) => state.user.rejected);
-    // const authentication = useSelector((state: any) => state.authentication.value);
 
     const publicClientApplication = new PublicClientApplication({
         auth: {
@@ -54,7 +52,6 @@ export const HomeComponent = () => {
                                 () => {
                                     initGraph();
                                     dispatch(getUserGraph());
-                                    // if (authResponse) { dispatch(isAuthenticated(true)) };
                                 }
                             }>login</button>
                         </div>

@@ -1,3 +1,5 @@
+import { Client } from "@microsoft/microsoft-graph-client";
+
 var instance: any = null;
 export class GraphService {
   static getInstance() {
@@ -11,19 +13,21 @@ export class GraphService {
     instance = _instance;
   }
 
+  //get user
   getUser = async (client: any) => {
-    return await client
-      .api("/me")
-      // Only get the fields used by the app
-      // .select('id,displayName,mail,userPrincipalName,mailboxSettings')
-      .get();
+    return await client.api("/me").get();
   };
 
   //send email
-  sendEmail = async (client: any, email: any) => {
+  sendEmail = async (
+    client: any,
+    address: string,
+    subject: string,
+    content: string
+  ) => {
     const mail = {
-      subject: email.subject,
-      toRecipients: email.toRecipients,
+      subject: subject,
+      toRecipients: [{ emailAddress: { address } }],
       ccRecipients: [
         {
           emailAddress: {
@@ -33,7 +37,7 @@ export class GraphService {
         },
       ],
       body: {
-        content: email.body.content,
+        content: content,
         contentType: "html",
       },
     };
@@ -45,25 +49,33 @@ export class GraphService {
     }
   };
 
-  createEvent = async (client: any, Event: any) => {
+  createEvent = async (
+    client: Client,
+    subject: string,
+    address: string,
+    content: string,
+    displayName: string,
+    startDateTime: string,
+    endDateTime: string
+  ) => {
     const params = {
-      subject: Event.subject,
+      subject: subject,
       body: {
         contentType: "HTML",
-        content: Event.body.content,
+        content: content,
       },
       start: {
-        dateTime: Event.start.dateTime,
+        dateTime: startDateTime,
         timeZone: "Pacific Standard Time",
       },
       end: {
-        dateTime: Event.end.dateTime,
+        dateTime: endDateTime,
         timeZone: "Pacific Standard Time",
       },
       location: {
-        displayName: Event.location.displayName,
+        displayName: displayName,
       },
-      attendees: Event.attendees,
+      attendees: [{ emailAddress: { address: address } }],
     };
 
     try {
@@ -75,12 +87,17 @@ export class GraphService {
     }
   };
 
-  createOnlineMeeting = async (client: any, meeting: any) => {
+  createOnlineMeeting = async (
+    client: Client,
+    subject: string,
+    startDateTime: string,
+    endDateTime: string
+  ) => {
     console.log(client);
     const onlineMeeting = {
-      subject: meeting.subject,
-      startDateTime: meeting.startDateTime,
-      endDateTime: meeting.startDateTime,
+      subject: subject,
+      startDateTime: startDateTime,
+      endDateTime: endDateTime,
     };
     try {
       const response = await client

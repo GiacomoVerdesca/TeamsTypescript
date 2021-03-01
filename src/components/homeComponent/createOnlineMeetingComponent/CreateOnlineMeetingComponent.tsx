@@ -6,15 +6,13 @@ import { client } from '../../../service/InitialGraph';
 let serviceCallApiGraph: any = GraphService.getInstance();
 export const CreateOnlineMeetingComponent = () => {
 
-    const [meeting, setMeeting] = useState({
-        subject: '',
-        startDateTime: new Date().toISOString(),
-        endDateTime: new Date().toISOString()
-    });
+    const [subject, setSubject] = useState('');
+    const [startDateTime, setStartDateTime] = useState(new Date().toISOString());
+    const [endDateTime, setEndDateTime] = useState(new Date().toISOString());
 
 
     const createOnlineMeeting = () => {
-        serviceCallApiGraph.createOnlineMeeting(client, meeting);
+        serviceCallApiGraph.createOnlineMeeting(client, subject, startDateTime, endDateTime);
     }
 
     const handleSubmit = (event: any) => {
@@ -23,24 +21,21 @@ export const CreateOnlineMeetingComponent = () => {
     }
 
     const handleChangeSubject = (event: any) => {
-        setMeeting((prev: any) => ({
-            ...prev,
-            [event.target.name]: event.target.value
-        }))
-        console.log("subject", meeting.subject);
+        setSubject(event.target.value)
+        console.log("subject", subject);
     };
 
     return (
         <div className='card'>
-            <div className="card-header">
+            <div className="card-header text-white bg-primary">
                 <h3>Online meeting</h3>
             </div>
             <form className='card-body' onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="subject">Subject</label>
-                    <input className="form-control" type="text" name="subject" id="subject" placeholder="insert object" value={meeting.subject} onChange={handleChangeSubject} />
+                    <input className="form-control" type="text" name="subject" id="subject" placeholder="insert object" value={subject} onChange={handleChangeSubject} />
                 </div>
-                <button className='btn btn-primary'>Create onlineMeeting</button>
+                <button className='btn btn-primary' disabled={!subject}>Create onlineMeeting</button>
             </form>
         </div>
     )
