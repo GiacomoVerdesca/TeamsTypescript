@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { GraphService } from '../../../service/GraphService';
+import { useDispatch, useSelector } from 'react-redux';
 import { client } from '../../../service/InitialGraph';
 import { reEmail } from '../../../core/function/function';
 import { postCreateEvent } from '../../../Redux/slices/createEventSlice';
+import { createEventSelector } from '../../../Redux/selectors/selectors';
 
 
-let serviceCallApiGraph: any = GraphService.getInstance();
 export const CreateEventComponent = () => {
 
     const dispatch = useDispatch();
@@ -17,6 +16,8 @@ export const CreateEventComponent = () => {
     const [displayName, setDisplayName] = useState('');
     const [startDateTime, setStartDateTime] = useState(new Date().toISOString());
     const [endDateTime, setEndDateTime] = useState(new Date().toISOString());
+
+    const createEventResponse = useSelector(createEventSelector);
 
     const event = {
         client: client,
@@ -60,30 +61,34 @@ export const CreateEventComponent = () => {
     };
 
     return (
-        <div className='card'>
-            <div className="card-header text-white bg-primary">
-                <h3>Event calendar</h3>
+        <div>
+            <div className='card'>
+                <div className="card-header text-white bg-primary">
+                    <h3>Event calendar</h3>
+                </div>
+                <form className='card-body' onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="address">Email address</label>
+                        <input className="form-control" type="mail" placeholder="insert mail address" name="address" id="address" value={address} onChange={handleChangeMail} />
+                        {!reEmail.test(address) && address && <small className='text-danger'>Inserire un' email valida!</small>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="subject">Subject</label>
+                        <input className="form-control" type="text" name="subject" id="subject" placeholder="insert object" value={subject} onChange={handleChangeSubject} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="content">Content</label>
+                        <textarea className="form-control" name="content" id="content" placeholder="insert body" value={content} onChange={handleChangeContent} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="displayName">Location</label>
+                        <input type='text' className="form-control" name="displayName" id="displayName" placeholder="insert location" value={displayName} onChange={handleChangeLocation} />
+                    </div>
+                    <button className='btn btn-primary' disabled={!reEmail.test(address) || !subject || !content || !displayName}>Create event into calendar</button>
+                </form>
             </div>
-            <form className='card-body' onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="address">Email address</label>
-                    <input className="form-control" type="mail" placeholder="insert mail address" name="address" id="address" value={address} onChange={handleChangeMail} />
-                    {!reEmail.test(address) && address && <small className='text-danger'>Inserire un' email valida!</small>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="subject">Subject</label>
-                    <input className="form-control" type="text" name="subject" id="subject" placeholder="insert object" value={subject} onChange={handleChangeSubject} />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="content">Content</label>
-                    <textarea className="form-control" name="content" id="content" placeholder="insert body" value={content} onChange={handleChangeContent} />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="displayName">Location</label>
-                    <input type='text' className="form-control" name="displayName" id="displayName" placeholder="insert location" value={displayName} onChange={handleChangeLocation} />
-                </div>
-                <button className='btn btn-primary' disabled={!reEmail.test(address) || !subject || !content || !displayName}>Create event into calendar</button>
-            </form>
+            {createEventResponse.pending ? <img src="http://www.sudburycatholicschools.ca/wp-content/plugins/3d-flip-book/assets/images/dark-loader.gif" alt="Loading..." height='50' width='50' /> : null}
         </div>
+
     )
 }

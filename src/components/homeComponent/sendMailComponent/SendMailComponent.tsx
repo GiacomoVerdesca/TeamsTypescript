@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { GraphService } from '../../../service/GraphService';
 import { client } from '../../../service/InitialGraph';
 import { reEmail } from '../../../core/function/function';
 import { postSendEmail } from '../../../Redux/slices/sendEmailSlice';
-import { authResponseSelector } from '../../../Redux/selectors/selectors';
+import { authResponseSelector, sendEmailSelector } from '../../../Redux/selectors/selectors';
 
 
 export const SendMailComponent = () => {
@@ -16,6 +15,7 @@ export const SendMailComponent = () => {
     const [content, setContent] = useState('');
     const authResponse = useSelector(authResponseSelector);
 
+    const sendEmailResponse = useSelector(sendEmailSelector);
 
     const email = {
         client: client,
@@ -51,26 +51,30 @@ export const SendMailComponent = () => {
 
 
     return (
-        <div className='card'>
-            <div className="card-header text-white bg-primary">
-                <h3>Email</h3>
+        <div>
+            <div className='card'>
+                <div className="card-header text-white bg-primary">
+                    <h3>Email</h3>
+                </div>
+                <form className='card-body' onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="address">Email address</label>
+                        <input className="form-control" type="mail" placeholder="insert mail address" name="address" id="address" value={address} onChange={handleChangeMail} />
+                        {!reEmail.test(address) && address && <small className='text-danger'>Inserire un' email valida!</small>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="subject">Subject</label>
+                        <input className="form-control" type="text" name="subject" id="subject" placeholder="insert object" value={subject} onChange={handleChangeSubject} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="content">Content</label>
+                        <textarea className="form-control" name="content" id="content" placeholder="insert body" value={content} onChange={handleChangeBody} />
+                    </div>
+                    <button className='btn btn-primary' disabled={!reEmail.test(address) || !subject || !content}>Send Mail</button>
+                </form>
             </div>
-            <form className='card-body' onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="address">Email address</label>
-                    <input className="form-control" type="mail" placeholder="insert mail address" name="address" id="address" value={address} onChange={handleChangeMail} />
-                    {!reEmail.test(address) && address && <small className='text-danger'>Inserire un' email valida!</small>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="subject">Subject</label>
-                    <input className="form-control" type="text" name="subject" id="subject" placeholder="insert object" value={subject} onChange={handleChangeSubject} />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="content">Content</label>
-                    <textarea className="form-control" name="content" id="content" placeholder="insert body" value={content} onChange={handleChangeBody} />
-                </div>
-                <button className='btn btn-primary' disabled={!reEmail.test(address) || !subject || !content}>Send Mail</button>
-            </form>
+            {sendEmailResponse.pending ? <img src="http://www.sudburycatholicschools.ca/wp-content/plugins/3d-flip-book/assets/images/dark-loader.gif" alt="Loading..." height='50' width='50' /> : null}
         </div>
+
     )
 }

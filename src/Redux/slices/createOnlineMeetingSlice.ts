@@ -12,32 +12,57 @@ interface onlineMeeting {
 }
 export const postCreateOnlineMeeting: any = createAsyncThunk(
   "createOnlineMeeting/postCreateOnlineMeeting",
-  (onlineMeeting: onlineMeeting) => {
-    return service.createOnlineMeeting(
+  (onlineMeeting: onlineMeeting, thunkApi) => {
+    const response = service.createOnlineMeeting(
       onlineMeeting.client,
       onlineMeeting.subject,
       onlineMeeting.startDateTime,
       onlineMeeting.endDateTime
     );
+    if (response.status === 400 || response.status === 404) {
+      return thunkApi.rejectWithValue(response);
+    }
+    return response;
   }
 );
 
 const createOnlineMeetingSlice = createSlice({
   name: "createOnlineMeeting",
   initialState: {
+    pending: false,
     rejected: "",
     onlineMeeting: {},
+    success: false
   },
-  reducers: {},
-  extraReducers: {
-    [postCreateOnlineMeeting.rejected]: (state) => {
-      state.rejected = "richiesta rigettata";
+  reducers: {
+    setSuccessMeeting: (state, action) => {
+      state.success = action.payload;
     },
-    [postCreateOnlineMeeting.fulfilled]: (state, action) => {
+    setRejectedMeeting: (state, action) => {
+      state.rejected = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(postCreateOnlineMeeting.pending, (state) => {
+      state.pending = true;
+    });
+    builder.addCase(postCreateOnlineMeeting.fulfilled, (state, action) => {
       state.onlineMeeting = action.payload;
-      state.rejected = "";
-    },
+      state.pending = false;
+      state.success = true;
+
+    });
+    builder.addCase(postCreateOnlineMeeting.rejected, (state, action) => {
+      if (action.payload) {
+        state.rejected = action.payload.errorMessage;
+        state.pending = false;
+      } else {
+        state.rejected = action.error;
+        state.pending = false;
+      }
+    });
   },
 });
 
+export const { setSuccessMeeting, setRejectedMeeting } = createOnlineMeetingSlice.actions;
 export const createOnlineMeetingReducer = createOnlineMeetingSlice.reducer;

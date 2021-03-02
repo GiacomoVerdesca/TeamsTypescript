@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './HomeComponent.css';
 import { initGraph } from '../../service/InitialGraph';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,7 +8,10 @@ import { CreateEventComponent } from './createEventComponent/CreateEventComponen
 import { CreateOnlineMeetingComponent } from './createOnlineMeetingComponent/CreateOnlineMeetingComponent';
 import { PublicClientApplication } from '@azure/msal-browser';
 import { config } from '../../config/config';
-import { authResponseSelector, authResponsePendingSelector, authResponseRejectedSelector, authenticationSelector } from '../../Redux/selectors/selectors';
+import { authResponseSelector, authResponsePendingSelector, authResponseRejectedSelector, authenticationSelector, createOnlineMeetingSelector, createEventSelector, sendEmailSelector } from '../../Redux/selectors/selectors';
+import { setSuccessEmail, setRejectedEmail } from '../../Redux/slices/sendEmailSlice';
+import { setSuccessEvent, setRejectedEvent } from '../../Redux/slices/createEventSlice';
+import { setSuccessMeeting, setRejectedMeeting } from '../../Redux/slices/createOnlineMeetingSlice';
 
 
 export const HomeComponent = () => {
@@ -19,6 +22,10 @@ export const HomeComponent = () => {
     const authentication = useSelector(authenticationSelector);
     const authResponsePending = useSelector(authResponsePendingSelector);
     const authResponseRejected = useSelector(authResponseRejectedSelector);
+    const onlineMeetingResponse = useSelector(createOnlineMeetingSelector);
+    const sendEmailResponse = useSelector(sendEmailSelector);
+    const createEventResponse = useSelector(createEventSelector);
+
 
     const publicClientApplication = new PublicClientApplication({
         auth: {
@@ -26,8 +33,6 @@ export const HomeComponent = () => {
             redirectUri: config.redirectURI,
         }
     });
-
-
 
     return (
         <div className='container homeContainer'>
@@ -61,6 +66,33 @@ export const HomeComponent = () => {
                             <div className="row rowDisplayname">
                                 <h1>Ciao {authResponse?.displayName}</h1>
                             </div>
+
+                            {/* alert promise errori */}
+                            {sendEmailResponse.rejected ? <div className="alert alert-danger" role="alert">
+                                {sendEmailResponse.rejected.message} {authResponse.userPrincipalName}
+                                <button type="button" className="close" onClick={() => { dispatch(setRejectedEmail('')) }}>x</button>
+                            </div> : onlineMeetingResponse.rejected ? <div className="alert alert-danger" role="alert">
+                                {onlineMeetingResponse.rejected.message} {authResponse.userPrincipalName}
+                                <button type="button" className="close" onClick={() => { dispatch(setRejectedMeeting('')) }}>x</button>
+                            </div> : createEventResponse.rejected ? <div className="alert alert-danger" role="alert">
+                                {createEventResponse.rejected.message} {authResponse.userPrincipalName}
+                                <button type="button" className="close" onClick={() => { dispatch(setRejectedEvent('')) }}>x</button>
+                            </div> : null
+                            }
+
+                            {/* alert promise successo */}
+                            {sendEmailResponse.success ? <div className="alert alert-success" role="alert">
+                                Email inviata correttamente!
+                                 <button type="button" className="close" onClick={() => { dispatch(setSuccessEmail(false)) }}>x</button>
+                            </div> : onlineMeetingResponse.success ? <div className="alert alert-success" role="alert">
+                                Meeting creato correttamente!
+                                     <button type="button" className="close" onClick={() => { dispatch(setSuccessMeeting(false)) }}>x</button>
+                            </div> : createEventResponse.success ? <div className="alert alert-success" role="alert">
+                                Evento creato correttamente!
+                                         <button type="button" className="close" onClick={() => { dispatch(setSuccessEvent(false)) }}>x</button>
+                            </div> : null}
+
+
                             <div className="row">
                                 <div className="col-md-4">
                                     <SendMailComponent />

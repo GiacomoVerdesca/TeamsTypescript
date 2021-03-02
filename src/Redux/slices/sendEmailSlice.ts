@@ -12,33 +12,57 @@ interface email {
 }
 export const postSendEmail: any = createAsyncThunk(
   "sendEmail/postSendEmail",
-  (email: email) => {
-   return service.sendEmail(
+  (email: email, thunkApi) => {
+    const response = service.sendEmail(
       email.client,
       email.address,
       email.subject,
       email.content,
       email.userPrincipalName
     );
+    if (response.status === 400 || response.status === 404) {
+      return thunkApi.rejectWithValue(response);
+    }
+    return response;
   }
 );
 
 const sendEmailSlice = createSlice({
   name: "sendEmail",
   initialState: {
+    pending: false,
     rejected: "",
     email: {},
+    success: false,
   },
-  reducers: {},
-  extraReducers: {
-    [postSendEmail.rejected]: (state) => {
-      state.rejected = "richiesta rigettata";
+  reducers: {
+    setSuccessEmail: (state, action) => {
+      state.success = action.payload;
     },
-    [postSendEmail.fulfilled]: (state, action) => {
+    setRejectedEmail: (state, action) => {
+      state.rejected = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(postSendEmail.pending, (state) => {
+      state.pending = true;
+    });
+    builder.addCase(postSendEmail.fulfilled, (state, action) => {
       state.email = action.payload;
-      state.rejected = "";
-    },
+      state.pending = false;
+      state.success = true;
+    });
+    builder.addCase(postSendEmail.rejected, (state, action) => {
+      if (action.payload) {
+        state.rejected = action.payload.errorMessage;
+        state.pending = false;
+      } else {
+        state.rejected = action.error;
+        state.pending = false;
+      }
+    });
   },
 });
 
+export const { setSuccessEmail, setRejectedEmail } = sendEmailSlice.actions;
 export const sendEmailReducer = sendEmailSlice.reducer;

@@ -15,8 +15,8 @@ interface event {
 }
 export const postCreateEvent: any = createAsyncThunk(
   "createEvent/postCreateEvent",
-  (event: event) => {
-    return service.createEvent(
+  (event: event, thunkApi) => {
+    const response = service.createEvent(
       event.client,
       event.subject,
       event.address,
@@ -25,25 +25,49 @@ export const postCreateEvent: any = createAsyncThunk(
       event.startDateTime,
       event.endDateTime
     );
+    if (response.status === 400 || response.status === 404) {
+      return thunkApi.rejectWithValue(response);
+    }
+    return response;
   }
 );
 
 const createEventSlice = createSlice({
   name: "createEvent",
   initialState: {
+    pending: false,
     rejected: "",
     event: {},
+    success: false,
   },
-  reducers: {},
-  extraReducers: {
-    [postCreateEvent.rejected]: (state) => {
-      state.rejected = "richiesta rigettata";
+  reducers: {
+    setSuccessEvent: (state, action) => {
+      state.success = action.payload;
     },
-    [postCreateEvent.fulfilled]: (state, action) => {
+    setRejectedEvent: (state, action) => {
+      state.rejected = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(postCreateEvent.pending, (state) => {
+      state.pending = true;
+    });
+    builder.addCase(postCreateEvent.fulfilled, (state, action) => {
       state.event = action.payload;
-      state.rejected = "";
-    },
+      state.pending = false;
+      state.success = true;
+    });
+    builder.addCase(postCreateEvent.rejected, (state, action) => {
+      if (action.payload) {
+        state.rejected = action.payload.errorMessage;
+        state.pending = false;
+      } else {
+        state.rejected = action.error;
+        state.pending = false;
+      }
+    });
   },
 });
 
+export const { setSuccessEvent, setRejectedEvent } = createEventSlice.actions;
 export const createEventReducer = createEventSlice.reducer;

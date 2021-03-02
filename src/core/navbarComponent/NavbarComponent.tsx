@@ -15,6 +15,7 @@ export const NavbarComponent = () => {
         <div className="navbar-nav ">
 
           <p className='username'>{authResponse.displayName}</p>
+          <p className='username'>Account: {authResponse.userPrincipalName}</p>
 
         </div>
       </nav>}
