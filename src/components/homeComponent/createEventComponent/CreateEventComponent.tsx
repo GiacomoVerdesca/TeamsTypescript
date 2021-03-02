@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { GraphService } from '../../../service/GraphService';
 import { client } from '../../../service/InitialGraph';
 import { reEmail } from '../../../core/function/function';
+import { postCreateEvent } from '../../../Redux/slices/createEventSlice';
 
 
 let serviceCallApiGraph: any = GraphService.getInstance();
 export const CreateEventComponent = () => {
+
+    const dispatch = useDispatch();
 
     const [subject, setSubject] = useState('');
     const [address, setAddress] = useState('');
@@ -14,8 +18,19 @@ export const CreateEventComponent = () => {
     const [startDateTime, setStartDateTime] = useState(new Date().toISOString());
     const [endDateTime, setEndDateTime] = useState(new Date().toISOString());
 
+    const event = {
+        client: client,
+        subject: subject,
+        address: address,
+        content: content,
+        displayName: displayName,
+        startDateTime: startDateTime,
+        endDateTime: endDateTime,
+    }
+
     const createEvent = () => {
-        serviceCallApiGraph.createEvent(client, subject, address, content, displayName, startDateTime, endDateTime);
+        // serviceCallApiGraph.createEvent(client, subject, address, content, displayName, startDateTime, endDateTime);
+        dispatch(postCreateEvent(event))
     }
 
     const handleSubmit = (event: any) => {
@@ -53,7 +68,7 @@ export const CreateEventComponent = () => {
                 <div className="form-group">
                     <label htmlFor="address">Email address</label>
                     <input className="form-control" type="mail" placeholder="insert mail address" name="address" id="address" value={address} onChange={handleChangeMail} />
-                   {!reEmail.test(address) && address && <small className='text-danger'>Inserire un' email valida!</small>}
+                    {!reEmail.test(address) && address && <small className='text-danger'>Inserire un' email valida!</small>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="subject">Subject</label>
