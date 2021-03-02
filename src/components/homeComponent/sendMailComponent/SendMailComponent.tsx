@@ -1,17 +1,32 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { GraphService } from '../../../service/GraphService';
 import { client } from '../../../service/InitialGraph';
 import { reEmail } from '../../../core/function/function';
+import { postSendEmail } from '../../../Redux/slices/sendEmailSlice';
+import { authResponseSelector } from '../../../Redux/selectors/selectors';
 
-let serviceCallApiGraph: any = GraphService.getInstance();
+
 export const SendMailComponent = () => {
+
+    const dispatch = useDispatch();
 
     const [address, setAddress] = useState('');
     const [subject, setSubject] = useState('');
     const [content, setContent] = useState('');
+    const authResponse = useSelector(authResponseSelector);
+
+
+    const email = {
+        client: client,
+        address: address,
+        subject: subject,
+        content: content,
+        userPrincipalName: authResponse.userPrincipalName
+    }
 
     const sendEmail = () => {
-        serviceCallApiGraph.sendEmail(client, address, subject, content);
+        dispatch(postSendEmail(email))
     }
 
 

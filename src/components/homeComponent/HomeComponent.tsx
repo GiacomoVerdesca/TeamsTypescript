@@ -8,16 +8,17 @@ import { CreateEventComponent } from './createEventComponent/CreateEventComponen
 import { CreateOnlineMeetingComponent } from './createOnlineMeetingComponent/CreateOnlineMeetingComponent';
 import { PublicClientApplication } from '@azure/msal-browser';
 import { config } from '../../config/config';
+import { authResponseSelector, authResponsePendingSelector, authResponseRejectedSelector, authenticationSelector } from '../../Redux/selectors/selectors';
 
 
 export const HomeComponent = () => {
 
     const dispatch = useDispatch();
 
-    const authResponse = useSelector((state: any) => state.user.user);
-    const authentication = useSelector((state: any) => state.user.authentication);
-    const authResponsePending = useSelector((state: any) => state.user.pending);
-    const authResponseRejected = useSelector((state: any) => state.user.rejected);
+    const authResponse = useSelector(authResponseSelector);
+    const authentication = useSelector(authenticationSelector);
+    const authResponsePending = useSelector(authResponsePendingSelector);
+    const authResponseRejected = useSelector(authResponseRejectedSelector);
 
     const publicClientApplication = new PublicClientApplication({
         auth: {
@@ -31,9 +32,9 @@ export const HomeComponent = () => {
     return (
         <div className='container homeContainer'>
             { authResponsePending ?
-          
+
                 // <h3>{authResponsePending}</h3>
-                <img src="https://i.gifer.com/YCZH.gif" alt="" style={{height:'100vh', marginLeft:'-85px'}}/>
+                <img src="https://i.gifer.com/YCZH.gif" alt="" style={{ height: '100vh', marginLeft: '-85px' }} />
                 : authResponseRejected ?
                     <div >
                         <button className='btn btn-primary' onClick={
@@ -44,11 +45,11 @@ export const HomeComponent = () => {
                         }>login</button>
                         {/* <h3>{authResponseRejected}</h3> */}
                         <br></br>
-                        <img src="  https://thumbs.gfycat.com/AmbitiousNewBubblefish-small.gif" alt="" style={{height:'60vh', marginLeft:'-130px'}}/>
+                        <img src="  https://thumbs.gfycat.com/AmbitiousNewBubblefish-small.gif" alt="" style={{ height: '60vh', marginLeft: '-130px' }} />
                     </div>
                     : !authentication ?
-                        <div style={{height:'100vh',display:'flex', justifyContent:'center', alignItems:'center'}}>
-                            <button className='btn btn-primary' style={{fontSize: '3em', padding: '50px 150px'}} onClick={
+                        <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <button className='btn btn-primary' style={{ fontSize: '3em', padding: '50px 150px' }} onClick={
                                 () => {
                                     initGraph();
                                     dispatch(getUserGraph());

@@ -1,6 +1,7 @@
 import { Client } from "@microsoft/microsoft-graph-client";
 
 var instance: any = null;
+
 export class GraphService {
   static getInstance() {
     if (instance === null) {
@@ -23,16 +24,16 @@ export class GraphService {
     client: any,
     address: string,
     subject: string,
-    content: string
+    content: string,
+    userPrincipalName: string
   ) => {
     const mail = {
       subject: subject,
-      toRecipients: [{ emailAddress: { address } }],
+      toRecipients: [{ emailAddress: { address: address } }],
       ccRecipients: [
         {
           emailAddress: {
-            address:
-              client.config.authProvider.msalApplication.account.userName,
+            address: userPrincipalName,
           },
         },
       ],
@@ -42,8 +43,7 @@ export class GraphService {
       },
     };
     try {
-      await client.api("/me/sendMail").post({ message: mail });
-      alert("inviato amigo!");
+    return await client.api("/me/sendMail").post({ message: mail });
     } catch (error) {
       throw error;
     }
@@ -79,9 +79,7 @@ export class GraphService {
     };
 
     try {
-      const response = await client.api("me/events").post(params);
-      console.log(response);
-      alert("Evento inviato");
+     return await client.api("me/events").post(params);
     } catch (error) {
       throw error;
     }
@@ -100,11 +98,9 @@ export class GraphService {
       endDateTime: endDateTime,
     };
     try {
-      const response = await client
+      return await client
         .api("me/onlineMeetings")
         .post(onlineMeeting);
-      console.log(response);
-      alert("Meeting creato");
     } catch (error) {
       throw error;
     }
