@@ -9,9 +9,10 @@ import { CreateOnlineMeetingComponent } from './createOnlineMeetingComponent/Cre
 import { PublicClientApplication } from '@azure/msal-browser';
 import { config } from '../../config/config';
 import { authResponseSelector, authResponsePendingSelector, authResponseRejectedSelector, authenticationSelector, createOnlineMeetingSelector, createEventSelector, sendEmailSelector } from '../../Redux/selectors/selectors';
-import { setSuccessEmail, setRejectedEmail } from '../../Redux/slices/sendEmailSlice';
-import { setSuccessEvent, setRejectedEvent } from '../../Redux/slices/createEventSlice';
-import { setSuccessMeeting, setRejectedMeeting } from '../../Redux/slices/createOnlineMeetingSlice';
+
+
+import { ToastAlertComponent } from '../../core/components/toastAlertComponent/ToastAlertComponent';
+
 
 
 export const HomeComponent = () => {
@@ -33,6 +34,8 @@ export const HomeComponent = () => {
             redirectUri: config.redirectURI,
         }
     });
+
+
 
     return (
         <div className='container homeContainer'>
@@ -67,30 +70,10 @@ export const HomeComponent = () => {
                                 <h1>Ciao {authResponse?.displayName}</h1>
                             </div>
 
-                            {/* alert promise errori */}
-                            {sendEmailResponse.rejected ? <div className="alert alert-danger" role="alert">
-                                {sendEmailResponse.rejected.message} {authResponse.userPrincipalName}
-                                <button type="button" className="close" onClick={() => { dispatch(setRejectedEmail('')) }}>x</button>
-                            </div> : onlineMeetingResponse.rejected ? <div className="alert alert-danger" role="alert">
-                                {onlineMeetingResponse.rejected.message} {authResponse.userPrincipalName}
-                                <button type="button" className="close" onClick={() => { dispatch(setRejectedMeeting('')) }}>x</button>
-                            </div> : createEventResponse.rejected ? <div className="alert alert-danger" role="alert">
-                                {createEventResponse.rejected.message} {authResponse.userPrincipalName}
-                                <button type="button" className="close" onClick={() => { dispatch(setRejectedEvent('')) }}>x</button>
-                            </div> : null
-                            }
 
-                            {/* alert promise successo */}
-                            {sendEmailResponse.success ? <div className="alert alert-success" role="alert">
-                                Email inviata correttamente!
-                                 <button type="button" className="close" onClick={() => { dispatch(setSuccessEmail(false)) }}>x</button>
-                            </div> : onlineMeetingResponse.success ? <div className="alert alert-success" role="alert">
-                                Meeting creato correttamente!
-                                     <button type="button" className="close" onClick={() => { dispatch(setSuccessMeeting(false)) }}>x</button>
-                            </div> : createEventResponse.success ? <div className="alert alert-success" role="alert">
-                                Evento creato correttamente!
-                                         <button type="button" className="close" onClick={() => { dispatch(setSuccessEvent(false)) }}>x</button>
-                            </div> : null}
+
+                            <ToastAlertComponent authResponse={authResponse}
+                                sendEmailResponse={sendEmailResponse} onlineMeetingResponse={onlineMeetingResponse} createEventResponse={createEventResponse} />
 
 
                             <div className="row">

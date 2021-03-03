@@ -45,6 +45,7 @@ const createOnlineMeetingSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(postCreateOnlineMeeting.pending, (state) => {
       state.pending = true;
+      state.success = false;
     });
     builder.addCase(postCreateOnlineMeeting.fulfilled, (state, action) => {
       state.onlineMeeting = action.payload;
@@ -56,9 +57,11 @@ const createOnlineMeetingSlice = createSlice({
       if (action.payload) {
         state.rejected = action.payload.errorMessage;
         state.pending = false;
+        state.success = false;
       } else {
         state.rejected = action.error;
         state.pending = false;
+        state.success = false;
       }
     });
   },

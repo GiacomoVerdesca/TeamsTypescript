@@ -1,7 +1,7 @@
 import React from "react";
 import "./NavbarComponent.css";
 import { useSelector } from 'react-redux';
-import { authResponseSelector, authenticationSelector } from '../../Redux/selectors/selectors';
+import { authResponseSelector, authenticationSelector } from '../../../Redux/selectors/selectors';
 
 export const NavbarComponent = () => {
 

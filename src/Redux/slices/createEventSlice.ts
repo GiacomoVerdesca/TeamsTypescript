@@ -51,6 +51,7 @@ const createEventSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(postCreateEvent.pending, (state) => {
       state.pending = true;
+      state.success = false;
     });
     builder.addCase(postCreateEvent.fulfilled, (state, action) => {
       state.event = action.payload;
@@ -61,9 +62,11 @@ const createEventSlice = createSlice({
       if (action.payload) {
         state.rejected = action.payload.errorMessage;
         state.pending = false;
+        state.success = false;
       } else {
         state.rejected = action.error;
         state.pending = false;
+        state.success = false;
       }
     });
   },

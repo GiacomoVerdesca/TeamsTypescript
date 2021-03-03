@@ -46,6 +46,7 @@ const sendEmailSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(postSendEmail.pending, (state) => {
       state.pending = true;
+      state.success = false;
     });
     builder.addCase(postSendEmail.fulfilled, (state, action) => {
       state.email = action.payload;
@@ -56,9 +57,11 @@ const sendEmailSlice = createSlice({
       if (action.payload) {
         state.rejected = action.payload.errorMessage;
         state.pending = false;
+         state.success = false;
       } else {
         state.rejected = action.error;
         state.pending = false;
+         state.success = false;
       }
     });
   },
