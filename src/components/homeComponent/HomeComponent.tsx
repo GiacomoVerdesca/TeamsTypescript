@@ -10,7 +10,6 @@ import { PublicClientApplication } from '@azure/msal-browser';
 import { config } from '../../config/config';
 import { authResponseSelector, authResponsePendingSelector, authResponseRejectedSelector, authenticationSelector, createOnlineMeetingSelector, createEventSelector, sendEmailSelector } from '../../Redux/selectors/selectors';
 
-
 import { ToastAlertComponent } from '../../core/components/toastAlertComponent/ToastAlertComponent';
 
 
@@ -34,7 +33,6 @@ export const HomeComponent = () => {
             redirectUri: config.redirectURI,
         }
     });
-
 
 
     return (
@@ -70,11 +68,8 @@ export const HomeComponent = () => {
                                 <h1>Ciao {authResponse?.displayName}</h1>
                             </div>
 
-
-
                             <ToastAlertComponent authResponse={authResponse}
                                 sendEmailResponse={sendEmailResponse} onlineMeetingResponse={onlineMeetingResponse} createEventResponse={createEventResponse} />
-
 
                             <div className="row">
                                 <div className="col-md-4">
