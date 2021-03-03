@@ -36,7 +36,7 @@ const createEventSlice = createSlice({
   name: "createEvent",
   initialState: {
     pending: false,
-    rejected: "",
+    rejected: {},
     event: {},
     success: false,
   },
@@ -64,7 +64,11 @@ const createEventSlice = createSlice({
         state.pending = false;
         state.success = false;
       } else {
-        state.rejected = action.error;
+        state.rejected = {
+          name: action.error.name,
+          message: action.error.message,
+          code: action.error.code,
+        };
         state.pending = false;
         state.success = false;
       }

@@ -31,7 +31,7 @@ const sendEmailSlice = createSlice({
   name: "sendEmail",
   initialState: {
     pending: false,
-    rejected: "",
+    rejected: {},
     email: {},
     success: false,
   },
@@ -57,11 +57,15 @@ const sendEmailSlice = createSlice({
       if (action.payload) {
         state.rejected = action.payload.errorMessage;
         state.pending = false;
-         state.success = false;
+        state.success = false;
       } else {
-        state.rejected = action.error;
+        state.rejected = {
+          name: action.error.name,
+          message: action.error.message,
+          code: action.error.code,
+        };
         state.pending = false;
-         state.success = false;
+        state.success = false;
       }
     });
   },

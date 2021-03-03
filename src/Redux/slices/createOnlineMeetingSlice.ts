@@ -30,9 +30,9 @@ const createOnlineMeetingSlice = createSlice({
   name: "createOnlineMeeting",
   initialState: {
     pending: false,
-    rejected: "",
+    rejected: {},
     onlineMeeting: {},
-    success: false
+    success: false,
   },
   reducers: {
     setSuccessMeeting: (state, action) => {
@@ -51,7 +51,6 @@ const createOnlineMeetingSlice = createSlice({
       state.onlineMeeting = action.payload;
       state.pending = false;
       state.success = true;
-
     });
     builder.addCase(postCreateOnlineMeeting.rejected, (state, action) => {
       if (action.payload) {
@@ -59,7 +58,11 @@ const createOnlineMeetingSlice = createSlice({
         state.pending = false;
         state.success = false;
       } else {
-        state.rejected = action.error;
+        state.rejected = {
+          name: action.error.name,
+          message: action.error.message,
+          code: action.error.code,
+        };
         state.pending = false;
         state.success = false;
       }
@@ -67,5 +70,8 @@ const createOnlineMeetingSlice = createSlice({
   },
 });
 
-export const { setSuccessMeeting, setRejectedMeeting } = createOnlineMeetingSlice.actions;
+export const {
+  setSuccessMeeting,
+  setRejectedMeeting,
+} = createOnlineMeetingSlice.actions;
 export const createOnlineMeetingReducer = createOnlineMeetingSlice.reducer;
