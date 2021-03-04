@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './HomeComponent.css';
 import { initGraph } from '../../service/InitialGraph';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,7 +11,6 @@ import { config } from '../../config/config';
 import { authResponseSelector, authResponsePendingSelector, authResponseRejectedSelector, authenticationSelector, createOnlineMeetingSelector, createEventSelector, sendEmailSelector } from '../../Redux/selectors/selectors';
 
 import { ToastAlertComponent } from '../../core/components/toastAlertComponent/ToastAlertComponent';
-
 
 
 export const HomeComponent = () => {

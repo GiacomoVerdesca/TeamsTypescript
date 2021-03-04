@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { authResponseSelector, createOnlineMeetingSelector, createEventSelector, sendEmailSelector } from '../../../Redux/selectors/selectors';
 
 export const ToastAlertComponent = (props: any) => {
+  console.log(props)
 
   const dispatch = useDispatch();
 
@@ -37,6 +38,7 @@ export const ToastAlertComponent = (props: any) => {
     progress: undefined,
   })
 
+
   return (
     <div>
 
@@ -48,6 +50,23 @@ export const ToastAlertComponent = (props: any) => {
         : onlineMeetingResponse.rejected.message ? toastError((onlineMeetingResponse.rejected.message + '\n' + authResponse.userPrincipalName)) && dispatch(setRejectedMeeting(''))
           : createEventResponse.rejected.message ? toastError((createEventResponse.rejected.message + '\n' + authResponse.userPrincipalName)) && dispatch(setRejectedEvent('')) : null}
 
+
+
+
+
+
+
+
+
+      {/* {props.sendEmailResponse.success ? toastSuccess('Email inviata correttamente!') 
+        : props.onlineMeetingResponse.success ? toastSuccess('Meeting creato correttamente!') 
+          : props.createEventResponse.success ? toastSuccess('Evento creato correttamente!')  : null} */}
+
+
+      {/* {props.sendEmailResponse.rejected?.message ? toastError((props.sendEmailResponse.rejected.message + '\n' + props.authResponse.userPrincipalName)) && dispatch(setRejectedEmail('')) 
+        : props.onlineMeetingResponse.rejected?.message ? toastError((props.onlineMeetingResponse.rejected.message + '\n' + props.authResponse.userPrincipalName)) && dispatch(setRejectedMeeting(''))
+          : props.createEventResponse.rejected?.message ? toastError((props.createEventResponse.rejected.message + '\n' + props.authResponse.userPrincipalName)) && dispatch(setRejectedEvent('')) : null} */}
+
       {/* {props.sendEmailResponse.success ? toastSuccess('Email inviata correttamente!', dispatch(setSuccessEmail(false)))
         : props.onlineMeetingResponse.success ? toastSuccess('Meeting creato correttamente!', dispatch(setSuccessMeeting(false)))
           : props.createEventResponse.success ? toastSuccess('Evento creato correttamente!', dispatch(setSuccessEvent(false))) : null}
@@ -55,6 +74,11 @@ export const ToastAlertComponent = (props: any) => {
       {props.sendEmailResponse.rejected.message ? toastError((props.sendEmailResponse.rejected.message + '\n' + props.authResponse.userPrincipalName), dispatch(setRejectedEmail('')))
         : props.onlineMeetingResponse.rejected.message ? toastError((props.onlineMeetingResponse.rejected.message + '\n' + props.authResponse.userPrincipalName), dispatch(setRejectedMeeting('')))
           : props.createEventResponse.rejected.message ? toastError((props.createEventResponse.rejected.message + '\n' + props.authResponse.userPrincipalName), dispatch(setRejectedEvent(''))) : null} */}
+
+
+
+
+
 
       <ToastContainer position="top-center"
         autoClose={5000}
