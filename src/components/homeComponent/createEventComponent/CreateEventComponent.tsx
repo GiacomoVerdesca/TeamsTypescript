@@ -6,6 +6,8 @@ import { postCreateEvent } from '../../../Redux/slices/createEventSlice';
 import { createEventSelector } from '../../../Redux/selectors/selectors';
 import { ToastAlertComponent } from '../../../core/components/toastAlertComponent/ToastAlertComponent';
 import { setSuccessEvent, setRejectedEvent } from '../../../Redux/slices/createEventSlice';
+import { setSuccessMeeting, setRejectedMeeting } from '../../../Redux/slices/createOnlineMeetingSlice';
+import { setSuccessEmail, setRejectedEmail } from '../../../Redux/slices/sendEmailSlice';
 
 
 export const CreateEventComponent = () => {
@@ -32,12 +34,15 @@ export const CreateEventComponent = () => {
     }
 
     const createEvent = () => {
-        // serviceCallApiGraph.createEvent(client, subject, address, content, displayName, startDateTime, endDateTime);
         dispatch(postCreateEvent(event))
     }
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
+        dispatch(setSuccessMeeting(false))
+        dispatch(setRejectedEmail({}))
+        dispatch(setRejectedMeeting({}))
+        dispatch(setSuccessEmail(false))
         createEvent();
     }
 
@@ -93,7 +98,7 @@ export const CreateEventComponent = () => {
 
             {createEventResponse.pending ? <img src="http://www.sudburycatholicschools.ca/wp-content/plugins/3d-flip-book/assets/images/dark-loader.gif" alt="Loading..." height='50' width='50' /> : null}
 
-           {(createEventResponse.success || createEventResponse.rejected.message) && <ToastAlertComponent esito={createEventResponse} id='createEventResponse' success={setSuccessEvent(false)} error={setRejectedEvent({ })}/>}
+            {(createEventResponse.success || createEventResponse.rejected.message) && <ToastAlertComponent esito={createEventResponse} message='Evento creato correttamente!'  success={setSuccessEvent(false)} error={setRejectedEvent({})} />}
 
         </div>
 

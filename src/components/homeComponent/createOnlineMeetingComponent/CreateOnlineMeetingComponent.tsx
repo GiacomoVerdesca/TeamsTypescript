@@ -5,6 +5,8 @@ import { postCreateOnlineMeeting } from '../../../Redux/slices/createOnlineMeeti
 import { createOnlineMeetingSelector } from '../../../Redux/selectors/selectors';
 import { ToastAlertComponent } from '../../../core/components/toastAlertComponent/ToastAlertComponent';
 import { setSuccessMeeting, setRejectedMeeting } from '../../../Redux/slices/createOnlineMeetingSlice';
+import { setSuccessEmail, setRejectedEmail } from '../../../Redux/slices/sendEmailSlice';
+import { setSuccessEvent, setRejectedEvent } from '../../../Redux/slices/createEventSlice';
 
 
 export const CreateOnlineMeetingComponent = () => {
@@ -25,12 +27,15 @@ export const CreateOnlineMeetingComponent = () => {
     }
 
     const createOnlineMeeting = () => {
-        // serviceCallApiGraph.createOnlineMeeting(client, subject, startDateTime, endDateTime);
         dispatch(postCreateOnlineMeeting(onlineMeetingObj))
     }
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
+        dispatch(setSuccessEvent(false))
+        dispatch(setRejectedEmail({}))
+        dispatch(setRejectedEvent({}))
+        dispatch(setSuccessEmail(false))
         createOnlineMeeting();
     }
 
@@ -39,7 +44,6 @@ export const CreateOnlineMeetingComponent = () => {
         console.log("subject", subject);
     };
 
-    console.log(OnlineMeeting.success)
     return (
 
         <div>
@@ -61,7 +65,7 @@ export const CreateOnlineMeetingComponent = () => {
 
             {OnlineMeeting.pending ? <img src="http://www.sudburycatholicschools.ca/wp-content/plugins/3d-flip-book/assets/images/dark-loader.gif" alt="Loading..." height='50' width='50' /> : null}
 
-            {(OnlineMeeting.success || OnlineMeeting.rejected.message) && <ToastAlertComponent esito={OnlineMeeting} id='OnlineMeeting' success={setSuccessMeeting(false)} error={setRejectedMeeting({ })}/>}
+            {(OnlineMeeting.success || OnlineMeeting.rejected.message) && <ToastAlertComponent esito={OnlineMeeting} message='Meeting creato correttamente!' success={setSuccessMeeting(false)} error={setRejectedMeeting({})} />}
 
         </div>
 

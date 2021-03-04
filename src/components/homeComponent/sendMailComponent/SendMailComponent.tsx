@@ -6,6 +6,8 @@ import { postSendEmail } from '../../../Redux/slices/sendEmailSlice';
 import { authResponseSelector, sendEmailSelector } from '../../../Redux/selectors/selectors';
 import { ToastAlertComponent } from '../../../core/components/toastAlertComponent/ToastAlertComponent';
 import { setSuccessEmail, setRejectedEmail } from '../../../Redux/slices/sendEmailSlice';
+import { setSuccessMeeting, setRejectedMeeting } from '../../../Redux/slices/createOnlineMeetingSlice';
+import { setSuccessEvent, setRejectedEvent } from '../../../Redux/slices/createEventSlice';
 
 
 export const SendMailComponent = () => {
@@ -28,12 +30,28 @@ export const SendMailComponent = () => {
     }
 
     const sendEmail = () => {
+
         dispatch(postSendEmail(email))
     }
 
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
+
+       
+            dispatch(setSuccessMeeting(false))
+            dispatch(setSuccessEvent(false))
+            dispatch(setRejectedMeeting({}))
+            dispatch(setRejectedEvent({}))
+        
+        // if (OnlineMeeting.success || createEventResponse.success) {
+        //     dispatch(setSuccessMeeting(false))
+        //     dispatch(setSuccessEvent(false))
+        // } else if (OnlineMeeting.rejected.message || createEventResponse.rejected.message) {
+        //     dispatch(setRejectedMeeting({}))
+        //     dispatch(setRejectedEvent({}))
+        // }
+
         sendEmail();
     }
 
@@ -79,7 +97,7 @@ export const SendMailComponent = () => {
 
             {sendEmailResponse.pending ? <img src="http://www.sudburycatholicschools.ca/wp-content/plugins/3d-flip-book/assets/images/dark-loader.gif" alt="Loading..." height='50' width='50' /> : null}
 
-            {(sendEmailResponse.success || sendEmailResponse.rejected.message) && <ToastAlertComponent esito={sendEmailResponse} id='sendEmailResponse' success={setSuccessEmail(false)} error={setRejectedEmail({})} />}
+            {(sendEmailResponse.success || sendEmailResponse.rejected.message) && <ToastAlertComponent esito={sendEmailResponse} message='Email inviata correttamente!' success={setSuccessEmail(false)} error={setRejectedEmail({})} />}
 
         </div>
 

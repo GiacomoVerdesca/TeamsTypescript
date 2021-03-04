@@ -78,3 +78,7 @@ const createEventSlice = createSlice({
 
 export const { setSuccessEvent, setRejectedEvent } = createEventSlice.actions;
 export const createEventReducer = createEventSlice.reducer;
+
+
+
+

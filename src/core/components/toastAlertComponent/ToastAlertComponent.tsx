@@ -7,27 +7,26 @@ import { ToastContainer, toast } from 'react-toastify';
 
 export const ToastAlertComponent = (props: any) => {
 
-  console.log('errore',props.esito.rejected.message)
-  console.log('success',props.esito.success)
+
 
   const dispatch = useDispatch();
 
   useEffect(() => {
 
     if (props.esito.success) {
-      toastSuccess('Inviata correttamente!', props.id, props.success)
+      toastSuccess(props.message, props.success)
     }
     else if (props.esito.rejected.message) {
-      toastError(props.esito.rejected.message, props.id, props.error)
+      toastError(props.esito.rejected.message, props.error)
     }
 
     //  props.esito.success ? toastSuccess('Inviata correttamente!') : props.esito.rejected.message ? toastError(props.esito.rejected.message) : null
 
-  }, [props.esito])
+  }, [props.esito.success, props.esito.rejected])
 
 
 
-  const toastSuccess = (success: string, id: string, setSuccess: any) => toast.success(success, {
+  const toastSuccess = (success: string, setSuccess: any) => toast.success(success, {
     className: 'toastSuccess',
     position: "top-center",
     autoClose: 5000,
@@ -36,11 +35,10 @@ export const ToastAlertComponent = (props: any) => {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    toastId: id,
-    onClose: ()=>dispatch(setSuccess)
+    onClose: () => dispatch(setSuccess)
   })
 
-  const toastError = (error: string, id: string, setError: any) => toast.error(error, {
+  const toastError = (error: string, setError: any) => toast.error(error, {
     position: "top-center",
     autoClose: 5000,
     hideProgressBar: false,
@@ -48,15 +46,15 @@ export const ToastAlertComponent = (props: any) => {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    toastId: id,
-    onClose: ()=>dispatch(setError)
+    onClose: () => dispatch(setError)
   })
 
 
   return (
     <div>
 
-      <ToastContainer position="top-center"
+      <ToastContainer
+        position="top-center"
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}

@@ -5,6 +5,7 @@ import { authResponseSelector, authenticationSelector } from '../../../Redux/sel
 
 export const NavbarComponent = () => {
 
+
   const authResponse = useSelector(authResponseSelector);
   const authentication = useSelector(authenticationSelector);
   return (
