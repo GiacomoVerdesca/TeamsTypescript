@@ -4,6 +4,8 @@ import { client } from '../../../service/InitialGraph';
 import { reEmail } from '../../../core/function/function';
 import { postCreateEvent } from '../../../Redux/slices/createEventSlice';
 import { createEventSelector } from '../../../Redux/selectors/selectors';
+import { ToastAlertComponent } from '../../../core/components/toastAlertComponent/ToastAlertComponent';
+import { setSuccessEvent, setRejectedEvent } from '../../../Redux/slices/createEventSlice';
 
 
 export const CreateEventComponent = () => {
@@ -62,6 +64,7 @@ export const CreateEventComponent = () => {
 
     return (
         <div>
+
             <div className='card'>
                 <div className="card-header text-white bg-primary">
                     <h3>Event calendar</h3>
@@ -87,7 +90,11 @@ export const CreateEventComponent = () => {
                     <button className='btn btn-primary' disabled={!reEmail.test(address) || !subject || !content || !displayName}>Create event into calendar</button>
                 </form>
             </div>
+
             {createEventResponse.pending ? <img src="http://www.sudburycatholicschools.ca/wp-content/plugins/3d-flip-book/assets/images/dark-loader.gif" alt="Loading..." height='50' width='50' /> : null}
+
+           {(createEventResponse.success || createEventResponse.rejected.message) && <ToastAlertComponent esito={createEventResponse} id='createEventResponse' success={setSuccessEvent(false)} error={setRejectedEvent({ })}/>}
+
         </div>
 
     )

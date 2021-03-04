@@ -8,9 +8,8 @@ import { CreateEventComponent } from './createEventComponent/CreateEventComponen
 import { CreateOnlineMeetingComponent } from './createOnlineMeetingComponent/CreateOnlineMeetingComponent';
 import { PublicClientApplication } from '@azure/msal-browser';
 import { config } from '../../config/config';
-import { authResponseSelector, authResponsePendingSelector, authResponseRejectedSelector, authenticationSelector, createOnlineMeetingSelector, createEventSelector, sendEmailSelector } from '../../Redux/selectors/selectors';
+import { authResponseSelector, authResponsePendingSelector, authResponseRejectedSelector, authenticationSelector} from '../../Redux/selectors/selectors';
 
-import { ToastAlertComponent } from '../../core/components/toastAlertComponent/ToastAlertComponent';
 
 
 export const HomeComponent = () => {
@@ -21,10 +20,6 @@ export const HomeComponent = () => {
     const authentication = useSelector(authenticationSelector);
     const authResponsePending = useSelector(authResponsePendingSelector);
     const authResponseRejected = useSelector(authResponseRejectedSelector);
-    const onlineMeetingResponse = useSelector(createOnlineMeetingSelector);
-    const sendEmailResponse = useSelector(sendEmailSelector);
-    const createEventResponse = useSelector(createEventSelector);
-
 
     const publicClientApplication = new PublicClientApplication({
         auth: {
@@ -67,8 +62,6 @@ export const HomeComponent = () => {
                                 <h1>Ciao {authResponse?.displayName}</h1>
                             </div>
 
-                            <ToastAlertComponent authResponse={authResponse}
-                                sendEmailResponse={sendEmailResponse} onlineMeetingResponse={onlineMeetingResponse} createEventResponse={createEventResponse} />
 
                             <div className="row">
                                 <div className="col-md-4">

@@ -4,6 +4,8 @@ import { client } from '../../../service/InitialGraph';
 import { reEmail } from '../../../core/function/function';
 import { postSendEmail } from '../../../Redux/slices/sendEmailSlice';
 import { authResponseSelector, sendEmailSelector } from '../../../Redux/selectors/selectors';
+import { ToastAlertComponent } from '../../../core/components/toastAlertComponent/ToastAlertComponent';
+import { setSuccessEmail, setRejectedEmail } from '../../../Redux/slices/sendEmailSlice';
 
 
 export const SendMailComponent = () => {
@@ -52,6 +54,7 @@ export const SendMailComponent = () => {
 
     return (
         <div>
+
             <div className='card'>
                 <div className="card-header text-white bg-primary">
                     <h3>Email</h3>
@@ -73,7 +76,11 @@ export const SendMailComponent = () => {
                     <button className='btn btn-primary' disabled={!reEmail.test(address) || !subject || !content}>Send Mail</button>
                 </form>
             </div>
+
             {sendEmailResponse.pending ? <img src="http://www.sudburycatholicschools.ca/wp-content/plugins/3d-flip-book/assets/images/dark-loader.gif" alt="Loading..." height='50' width='50' /> : null}
+
+            {(sendEmailResponse.success || sendEmailResponse.rejected.message) && <ToastAlertComponent esito={sendEmailResponse} id='sendEmailResponse' success={setSuccessEmail(false)} error={setRejectedEmail({})} />}
+
         </div>
 
     )
