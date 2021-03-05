@@ -14,7 +14,7 @@ export const ToastAlertComponent = (props: any) => {
   useEffect(() => {
 
     if (props.esito.success) {
-      toastSuccess(props.message, props.success)
+      toastSuccess(props.messageSuccess, props.success)
     }
     else if (props.esito.rejected.message) {
       toastError(props.esito.rejected.message, props.error)
@@ -26,7 +26,7 @@ export const ToastAlertComponent = (props: any) => {
 
 
 
-  const toastSuccess = (success: string, setSuccess: any) => toast.success(success, {
+  const toastSuccess = (success: string, setSuccess: boolean) => toast.success(success, {
     className: 'toastSuccess',
     position: "top-center",
     autoClose: 5000,
@@ -38,7 +38,7 @@ export const ToastAlertComponent = (props: any) => {
     onClose: () => dispatch(setSuccess)
   })
 
-  const toastError = (error: string, setError: any) => toast.error(error, {
+  const toastError = (error: string, setError: boolean) => toast.error(props.messageError+error , {
     position: "top-center",
     autoClose: 5000,
     hideProgressBar: false,

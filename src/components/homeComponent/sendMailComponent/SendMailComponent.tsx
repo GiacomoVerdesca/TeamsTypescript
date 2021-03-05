@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { client } from '../../../service/InitialGraph';
 import { reEmail } from '../../../core/function/function';
@@ -8,9 +8,12 @@ import { ToastAlertComponent } from '../../../core/components/toastAlertComponen
 import { setSuccessEmail, setRejectedEmail } from '../../../Redux/slices/sendEmailSlice';
 import { setSuccessMeeting, setRejectedMeeting } from '../../../Redux/slices/createOnlineMeetingSlice';
 import { setSuccessEvent, setRejectedEvent } from '../../../Redux/slices/createEventSlice';
+import { Client } from '@microsoft/microsoft-graph-client';
+import { email } from '../../../core/interfaces/interfaces';
 
 
-export const SendMailComponent = () => {
+
+export const SendMailComponent  = (props:any) => {
 
     const dispatch = useDispatch();
 
@@ -21,7 +24,8 @@ export const SendMailComponent = () => {
 
     const sendEmailResponse = useSelector(sendEmailSelector);
 
-    const email = {
+    
+    const email : email= {
         client: client,
         address: address,
         subject: subject,
@@ -38,12 +42,12 @@ export const SendMailComponent = () => {
     const handleSubmit = (event: any) => {
         event.preventDefault();
 
-       
-            dispatch(setSuccessMeeting(false))
-            dispatch(setSuccessEvent(false))
-            dispatch(setRejectedMeeting({}))
-            dispatch(setRejectedEvent({}))
-        
+
+        dispatch(props.setActionObj.setSuccessMeeting)
+        dispatch(props.setActionObj.setSuccessEvent)
+        dispatch(props.setActionObj.setRejectedMeeting)
+        dispatch(props.setActionObj.setRejectedEvent)
+
         // if (OnlineMeeting.success || createEventResponse.success) {
         //     dispatch(setSuccessMeeting(false))
         //     dispatch(setSuccessEvent(false))
@@ -97,7 +101,7 @@ export const SendMailComponent = () => {
 
             {sendEmailResponse.pending ? <img src="http://www.sudburycatholicschools.ca/wp-content/plugins/3d-flip-book/assets/images/dark-loader.gif" alt="Loading..." height='50' width='50' /> : null}
 
-            {(sendEmailResponse.success || sendEmailResponse.rejected.message) && <ToastAlertComponent esito={sendEmailResponse} message='Email inviata correttamente!' success={setSuccessEmail(false)} error={setRejectedEmail({})} />}
+            {(sendEmailResponse.success || sendEmailResponse.rejected.message) && <ToastAlertComponent esito={sendEmailResponse} messageSuccess='Email inviata correttamente!' success={props.setActionObj.setSuccessEmail} messageError={"Email non inviata. Error :"} error={props.setActionObj.setRejectedEmail} />}
 
         </div>
 

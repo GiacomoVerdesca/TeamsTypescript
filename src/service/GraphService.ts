@@ -1,6 +1,6 @@
 import { Client } from "@microsoft/microsoft-graph-client";
 
-var instance: any = null;
+var instance:any = null;
 
 export class GraphService {
   static getInstance() {
@@ -15,13 +15,13 @@ export class GraphService {
   }
 
   //get user
-  getUser = async (client: any) => {
+  getUser = async (client: Client) => {
     return await client.api("/me").get();
   };
 
   //send email
   sendEmail = async (
-    client: any,
+    client: Client,
     address: string,
     subject: string,
     content: string,

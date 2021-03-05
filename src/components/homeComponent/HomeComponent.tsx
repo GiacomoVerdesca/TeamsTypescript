@@ -9,10 +9,13 @@ import { CreateOnlineMeetingComponent } from './createOnlineMeetingComponent/Cre
 import { PublicClientApplication } from '@azure/msal-browser';
 import { config } from '../../config/config';
 import { authResponseSelector, authResponsePendingSelector, authResponseRejectedSelector, authenticationSelector} from '../../Redux/selectors/selectors';
+import { setSuccessEmail, setRejectedEmail } from '../../Redux/slices/sendEmailSlice';
+import { setSuccessMeeting, setRejectedMeeting } from '../../Redux/slices/createOnlineMeetingSlice';
+import { setSuccessEvent, setRejectedEvent } from '../../Redux/slices/createEventSlice';
 
 
 
-export const HomeComponent = () => {
+export const HomeComponent : React.FC = () => {
 
     const dispatch = useDispatch();
 
@@ -21,14 +24,23 @@ export const HomeComponent = () => {
     const authResponsePending = useSelector(authResponsePendingSelector);
     const authResponseRejected = useSelector(authResponseRejectedSelector);
 
-    const publicClientApplication = new PublicClientApplication({
+    
+    const setActionObj ={
+        setSuccessEmail:setSuccessEmail(false),
+        setRejectedEmail:setRejectedEmail({}),
+        setSuccessMeeting:setSuccessMeeting(false),
+        setRejectedMeeting:setRejectedMeeting({}),
+        setSuccessEvent:setSuccessEvent(false),
+        setRejectedEvent:setRejectedEvent({})
+    }
+    const publicClientApplication= new PublicClientApplication({
         auth: {
             clientId: config.appId,
             redirectUri: config.redirectURI,
         }
     });
 
-
+   
     return (
         <div className='container homeContainer'>
             { authResponsePending ?
@@ -65,13 +77,13 @@ export const HomeComponent = () => {
 
                             <div className="row">
                                 <div className="col-md-4">
-                                    <SendMailComponent />
+                                    <SendMailComponent setActionObj={setActionObj} />
                                 </div>
                                 <div className="col-md-4">
-                                    <CreateEventComponent />
+                                    <CreateEventComponent setActionObj={setActionObj} /> 
                                 </div>
                                 <div className="col-md-4">
-                                    <CreateOnlineMeetingComponent />
+                                    <CreateOnlineMeetingComponent setActionObj={setActionObj} />
                                 </div>
                             </div>
 

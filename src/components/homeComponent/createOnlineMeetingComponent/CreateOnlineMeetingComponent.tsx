@@ -4,12 +4,11 @@ import { client } from '../../../service/InitialGraph';
 import { postCreateOnlineMeeting } from '../../../Redux/slices/createOnlineMeetingSlice';
 import { createOnlineMeetingSelector } from '../../../Redux/selectors/selectors';
 import { ToastAlertComponent } from '../../../core/components/toastAlertComponent/ToastAlertComponent';
-import { setSuccessMeeting, setRejectedMeeting } from '../../../Redux/slices/createOnlineMeetingSlice';
-import { setSuccessEmail, setRejectedEmail } from '../../../Redux/slices/sendEmailSlice';
-import { setSuccessEvent, setRejectedEvent } from '../../../Redux/slices/createEventSlice';
+import { onlineMeeting } from '../../../core/interfaces/interfaces';
 
 
-export const CreateOnlineMeetingComponent = () => {
+
+export const CreateOnlineMeetingComponent = (props:any) => {
 
     const dispatch = useDispatch();
 
@@ -19,7 +18,7 @@ export const CreateOnlineMeetingComponent = () => {
 
     const OnlineMeeting = useSelector(createOnlineMeetingSelector)
 
-    const onlineMeetingObj = {
+    const onlineMeetingObj : onlineMeeting= {
         client: client,
         subject: subject,
         startDateTime: startDateTime,
@@ -32,10 +31,10 @@ export const CreateOnlineMeetingComponent = () => {
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        dispatch(setSuccessEvent(false))
-        dispatch(setRejectedEmail({}))
-        dispatch(setRejectedEvent({}))
-        dispatch(setSuccessEmail(false))
+        dispatch(props.setActionObj.setSuccessEvent)
+        dispatch(props.setActionObj.setRejectedEmail)
+        dispatch(props.setActionObj.setRejectedEvent)
+        dispatch(props.setActionObj.setSuccessEmail)
         createOnlineMeeting();
     }
 
@@ -65,7 +64,7 @@ export const CreateOnlineMeetingComponent = () => {
 
             {OnlineMeeting.pending ? <img src="http://www.sudburycatholicschools.ca/wp-content/plugins/3d-flip-book/assets/images/dark-loader.gif" alt="Loading..." height='50' width='50' /> : null}
 
-            {(OnlineMeeting.success || OnlineMeeting.rejected.message) && <ToastAlertComponent esito={OnlineMeeting} message='Meeting creato correttamente!' success={setSuccessMeeting(false)} error={setRejectedMeeting({})} />}
+            {(OnlineMeeting.success || OnlineMeeting.rejected.message) && <ToastAlertComponent esito={OnlineMeeting} messageSuccess='Meeting creato correttamente!' messageError="Meeting non creato. Error : " success={props.setActionObj.setSuccessMeeting} error={props.setActionObj.setRejectedMeeting} />}
 
         </div>
 

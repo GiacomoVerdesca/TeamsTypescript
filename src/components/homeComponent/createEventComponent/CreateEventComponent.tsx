@@ -5,12 +5,10 @@ import { reEmail } from '../../../core/function/function';
 import { postCreateEvent } from '../../../Redux/slices/createEventSlice';
 import { createEventSelector } from '../../../Redux/selectors/selectors';
 import { ToastAlertComponent } from '../../../core/components/toastAlertComponent/ToastAlertComponent';
-import { setSuccessEvent, setRejectedEvent } from '../../../Redux/slices/createEventSlice';
-import { setSuccessMeeting, setRejectedMeeting } from '../../../Redux/slices/createOnlineMeetingSlice';
-import { setSuccessEmail, setRejectedEmail } from '../../../Redux/slices/sendEmailSlice';
+import { event } from '../../../core/interfaces/interfaces';
 
 
-export const CreateEventComponent = () => {
+export const CreateEventComponent = (props:any) => {
 
     const dispatch = useDispatch();
 
@@ -23,7 +21,7 @@ export const CreateEventComponent = () => {
 
     const createEventResponse = useSelector(createEventSelector);
 
-    const event = {
+    const event :event = {
         client: client,
         subject: subject,
         address: address,
@@ -39,10 +37,10 @@ export const CreateEventComponent = () => {
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        dispatch(setSuccessMeeting(false))
-        dispatch(setRejectedEmail({}))
-        dispatch(setRejectedMeeting({}))
-        dispatch(setSuccessEmail(false))
+        dispatch(props.setActionObj.setSuccessMeeting)
+        dispatch(props.setActionObj.setRejectedEmail)
+        dispatch(props.setActionObj.setRejectedMeeting)
+        dispatch(props.setActionObj.setSuccessEmail)
         createEvent();
     }
 
@@ -98,7 +96,7 @@ export const CreateEventComponent = () => {
 
             {createEventResponse.pending ? <img src="http://www.sudburycatholicschools.ca/wp-content/plugins/3d-flip-book/assets/images/dark-loader.gif" alt="Loading..." height='50' width='50' /> : null}
 
-            {(createEventResponse.success || createEventResponse.rejected.message) && <ToastAlertComponent esito={createEventResponse} message='Evento creato correttamente!'  success={setSuccessEvent(false)} error={setRejectedEvent({})} />}
+            {(createEventResponse.success || createEventResponse.rejected.message) && <ToastAlertComponent esito={createEventResponse} messageSuccess='Evento creato correttamente!' messageError="Evento non creato. Error : " success={props.setActionObj.setSuccessEvent} error={props.setActionObj.setRejectedEvent} />}
 
         </div>
 
